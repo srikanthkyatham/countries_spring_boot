@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import io.reactivex.Single;
 import io.reactivex.schedulers.Schedulers;
+
 import org.springframework.http.ResponseEntity;
 
 @SpringBootApplication
@@ -26,30 +27,24 @@ public class CountriesApplication {
 		return "Hello World";
 	}
 
-	@RequestMapping(value = "/country_codes")
+	@RequestMapping(value = "/country_codes/v1")
 	public String codes() {
 		return restClient.getCodes();
 	}
 
- 	@RequestMapping(path = "/capital/{code}")
+	@RequestMapping(path = "/capital/v1/{code}")
 	public String getMessage(@PathVariable("code") String code) {
 		return restClient.capital(code);
 	}
 
-
-/* 	@RequestMapping(value = "/country_codes_rx")
-    public Single<ResponseEntity<String>> codes_rx() {
-		return countryService.codes()
-				.subscribeOn(Schedulers.io())
-				.toSingle(response -> ResponseEntity.ok(response));
-				
+	@RequestMapping(value = "/country_codes")
+	public Single<ResponseEntity<String>> codes_rx() {
+		return countryService.codes().subscribeOn(Schedulers.io()).map(response -> ResponseEntity.ok(response));
 	}
-	
-	@RequestMapping(value = "/capital_rx/{code}")
-    public Single<ResponseEntity<String>> getCapital_rx(@PathVariable("code") String code) {
-		return countryService.capital(code)
-				.subscribeOn(Schedulers.io())
-				.toSingle(response -> ResponseEntity.ok(response));
-    }
- */
+
+	@RequestMapping(value = "/capital/{code}")
+	public Single<ResponseEntity<String>> capital_rx(@PathVariable("code") String code) {
+		return countryService.capital(code).subscribeOn(Schedulers.io()).map(response -> ResponseEntity.ok(response));
+	}
+
 }
