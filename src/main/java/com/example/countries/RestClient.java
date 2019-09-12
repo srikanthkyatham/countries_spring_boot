@@ -95,10 +95,13 @@ public class RestClient {
             this.get();
         }
 
-        Country country = map.get(code);
-        JSONObject json = new JSONObject();
-        json.put("name", country.getName());
-        json.put("capital", country.getCapital());
-        return json.toString();
+        if (map.containsKey(code)) {
+            Country country = map.get(code);
+            JSONObject json = new JSONObject();
+            json.put("name", country.getName());
+            json.put("capital", country.getCapital());
+            return json.toString();
+        }
+        return new String(code + " does not exist");
     }
 }
