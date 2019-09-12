@@ -39,13 +39,13 @@ public class RestClient {
                 throw new RuntimeException("Failed : HTTP error code : " + response.getStatusLine().getStatusCode());
             }
 
-            // Get-Capture Complete application/xml body response
+            // Get-Capture Complete application/json body response
             BufferedReader br = new BufferedReader(new InputStreamReader((response.getEntity().getContent())));
             String input;
             StringBuffer sresponse = new StringBuffer();
             System.out.println("============Output:============");
 
-            // Simply iterate through XML response and show on console.
+            // Simply iterate through JSON response and show on console.
             while ((input = br.readLine()) != null) {
                 System.out.println(input);
                 sresponse.append(input);
@@ -62,10 +62,12 @@ public class RestClient {
                 System.out.println("currencies " + currencies.toString());
                 JSONObject currency = currencies.getJSONObject(0);
                 System.out.println("currency " + currency.toString());
-                if (currency.has("code")) {
-                    String code = currency.getString("code");
+                String countryName = country.getString("name");
+                if (countryName != null) {
+                    String code = countryName.substring(0, 2).toUpperCase();
+                    System.out.println("code " + code);
                     String capital = country.getString("capital");
-                    String name = country.getString("name");
+                    String name = countryName;
                     Country newCountry = new Country(name, capital);
                     map.put(code, newCountry);
                 }
